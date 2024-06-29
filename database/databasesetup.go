@@ -5,20 +5,19 @@ import (
 	"fmt"
 	"log"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func DBSet() *mongo.Client {
-	client, err := mongo.NewClient(options.Client().ApplyURI(""))
-
-	if err != nil {
-		log.Fatal(err)
-	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err = client.Connect(ctx)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(""))
+
 	if err != nil {
-		log.Fatal()
+		log.Fatal(err)
 	}
 	client.Ping(context.TODO(), nil)
 	if err != nil {

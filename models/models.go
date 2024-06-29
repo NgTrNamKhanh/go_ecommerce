@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"time"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type User struct {
 	ID              primitive.ObjectID `json: "_id" bson: "_id`
@@ -30,7 +33,7 @@ type Product struct {
 type ProductUser struct {
 	Product_ID   primitive.ObjectID `bson: "_id"`
 	Product_Name *string            `json: "product_name" bson: "product_name"`
-	Price        *uint              `json: "price" bson: "product_name`
+	Price        int              	`json: "price" bson: "price`
 	Rating       *uint              `json: "rating" bson: "rating`
 	Image        *string            `json: "image" bson: "image`
 }

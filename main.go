@@ -4,6 +4,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/NgTrNamKhanh/go_ecommerce/controllers"
+	"github.com/NgTrNamKhanh/go_ecommerce/database"
+	"github.com/NgTrNamKhanh/go_ecommerce/middleware"
+	"github.com/NgTrNamKhanh/go_ecommerce/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +22,7 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Logger())
 
-	router.UserRoutes(router)
+	routes.UserRoutes(router)
 	router.Use(middleware.Authentication())
 
 	router.GET("/addtocart", app.AddToCart())
