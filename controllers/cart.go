@@ -78,7 +78,7 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 		if productQueryID == "" {
 			log.Println("Product id is empty")
 
-			_ = c.AbortWithError(http.StatusBadRequest, errors.New("Product id is empty"))
+			_ = c.AbortWithError(http.StatusBadRequest, errors.New("product id is empty"))
 
 			return
 		}
@@ -87,7 +87,7 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 		if userQueryID == "" {
 			log.Println("user id is empty")
 
-			_ = c.AbortWithError(http.StatusBadRequest, errors.New("User id is empty"))
+			_ = c.AbortWithError(http.StatusBadRequest, errors.New("user id is empty"))
 
 			return
 		}
@@ -131,7 +131,7 @@ func (app *Application) GetItemFromCart() gin.HandlerFunc {
 		usert_id, _ := primitive.ObjectIDFromHex(user_id)
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
-
+		log.Println(usert_id)
 		var filledCart models.User
 		err:= UserCollection.FindOne(ctx, bson.D{primitive.E{Key: "_id", Value: usert_id}}).Decode(&filledCart)
 		if err!= nil{

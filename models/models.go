@@ -14,7 +14,7 @@ type User struct {
 	Phone           *string            `json: "phone" validate:"required"`
 	Token           *string            `json: "token" `
 	Refresh_Token   *string            `json: "refresh_token"`
-	Created_At      time.Time          `json: "create_at"`
+	Created_At      time.Time          `json: "created_at"`
 	Updated_At      time.Time          `json: "updated_at"`
 	User_ID         string             `json: "user_id"`
 	UserCart        []ProductUser      `json: "usercart" bson:"usercart"`

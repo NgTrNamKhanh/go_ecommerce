@@ -43,7 +43,7 @@ func AddProductToCart(ctx context.Context, prodCollection, userCollection *mongo
 		return ErrUserIdIsNotValid
 	}
 
-	filter := bson.D{primitive.E{Key: "_id", Value: id}}
+	filter := bson.D{primitive.E{Key: "id", Value: id}}
 	update := bson.D{{Key: "$push", Value: bson.D{primitive.E{Key: "usercart", Value: bson.D{{Key: "$each", Value: productCart}}}}}}
 	_, err = userCollection.UpdateOne(ctx, filter, update)
 	if err != nil {

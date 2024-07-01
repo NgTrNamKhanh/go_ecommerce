@@ -22,11 +22,10 @@ type SignedDetails struct {
 	jwt.StandardClaims
 }
 
-var UserData *mongo.Collection = database.UserData(database.Client, "User")
+var UserData *mongo.Collection = database.UserData(database.Client, "Users")
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
 func TokenGenerator(email, firstname, lastname, uid string ) (signedtoken string, signedrefreshtoken string, err error){
-
 	claims := &SignedDetails{
 		Email: email,
 		First_Name: firstname,
@@ -42,19 +41,17 @@ func TokenGenerator(email, firstname, lastname, uid string ) (signedtoken string
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(168)).Unix(),
 		},
 	}
-
-	token,err := jwt.NewWithClaims(jwt.SigningMethodES256, claims).SignedString([]byte(SECRET_KEY))
+	token,err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
 
 	if err != nil {
 		return "","", err
 	}
 
-	refreshtoken, err := jwt.NewWithClaims(jwt.SigningMethodES256, refreshclaims).SignedString([]byte(SECRET_KEY))
+	refreshtoken, err := jwt.NewWithClaims(jwt.SigningMethodHS256, refreshclaims).SignedString([]byte(SECRET_KEY))
 	if err != nil {
 		log.Panic(err)
 		return 
 	}
-
 	return token, refreshtoken, err
 }
 
@@ -83,7 +80,7 @@ func ValidateToken(signedtoken string)(claims *SignedDetails, msg string){
 	return claims, msg
 }
 
-func UpdateAllTokens(signedtoken string, signedrefreshtoken string, userid string){
+func UpdateAllTokens(signedtoken string, signedrefreshtoken string, userid string) error {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100 * time.Second)
 
 	var updateobj primitive.D
@@ -95,7 +92,7 @@ func UpdateAllTokens(signedtoken string, signedrefreshtoken string, userid strin
 	updateobj = append(updateobj, bson.E{Key: "updated_at", Value: updated_at})
 
 	upsert := true
-
+	log.Println(updated_at)
 	filter := bson.M{"user_id": userid}
 	opt := options.UpdateOptions{
 		Upsert: &upsert,
@@ -110,7 +107,9 @@ func UpdateAllTokens(signedtoken string, signedrefreshtoken string, userid strin
 
 	if err != nil {
 		log.Panic(err)
-		return 
+		log.Println(err)
+		return err
 	}
+	return nil
 	
 }
